@@ -68,3 +68,5 @@ fastlane/test_output
 
 ## User settings
 xcuserdata/
+
+.DS_Store
