@@ -15,7 +15,8 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/swift-dependencies", exact: "1.9.2")
+    .package(url: "https://github.com/pointfreeco/swift-dependencies", exact: "1.9.2"),
+    .package(url: "https://github.com/realm/SwiftLint", exact: "0.59.1"),
   ],
   targets: [
     .target(
@@ -25,16 +26,16 @@ let package = Package(
       name: "AccessFeature",
     ),
     .target(
-      name: "AppFeature"
+      name: "AppFeature",
     ),
     .target(
-      name: "GreetingFeature"
+      name: "GreetingFeature",
     ),
     .target(
-      name: "PhotoGalleryFeature"
+      name: "PhotoGalleryFeature",
     ),
     .target(
-      name: "ProfileFeature"
+      name: "ProfileFeature",
     ),
     .testTarget(
       name: "ShioriPackageTests",

@@ -1,0 +1,9 @@
+disabled_rules:
+  - trailing_comma # 配列とDictionaryの末尾のカンマはつけるべきでない
+  - trailing_semicolon
+
+included:
+  - "*/*.swift"
+  - "*/**/*.swift"
+
+excluded:
