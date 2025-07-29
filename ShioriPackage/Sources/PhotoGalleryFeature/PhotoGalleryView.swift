@@ -7,9 +7,11 @@
 
 import SwiftUI
 
-struct PhotoGalleryView: View {
-  var body: some View {
-    Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+public struct PhotoGalleryView: View {
+  public init () {}
+
+  public var body: some View {
+    Text("PhotoGallery")
   }
 }
 

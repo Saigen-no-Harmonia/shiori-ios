@@ -11,11 +11,17 @@ let package = Package(
   products: [
     .library(
       name: "AppFeature",
-      targets: ["AppFeature"]
+      targets: ["AppFeature",
+                "MainTabFeature",
+                "GreetingFeature",
+                "ProfileFeature",
+                "AccessFeature",
+                "PhotoGalleryFeature",
+                "AboutFeature"]
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/swift-dependencies", exact: "1.9.2"),
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.20.2"),
     .package(url: "https://github.com/realm/SwiftLint", exact: "0.59.1"),
   ],
   targets: [
@@ -27,9 +33,22 @@ let package = Package(
     ),
     .target(
       name: "AppFeature",
+      dependencies: [
+        "MainTabFeature"
+      ]
     ),
     .target(
       name: "GreetingFeature",
+    ),
+    .target(
+      name: "MainTabFeature",
+      dependencies: [
+        "AboutFeature",
+        "AccessFeature",
+        "GreetingFeature",
+        "PhotoGalleryFeature",
+        "ProfileFeature",
+      ]
     ),
     .target(
       name: "PhotoGalleryFeature",
