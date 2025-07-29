@@ -43,6 +43,7 @@ public struct MainTabView: View {
           Text("アプリについて")
         }
     }
+    .tint(Color("primary-color", bundle: .main))
   }
 }
 

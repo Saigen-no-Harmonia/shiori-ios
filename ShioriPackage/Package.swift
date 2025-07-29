@@ -41,6 +41,9 @@ let package = Package(
     ),
     .target(
       name: "GreetingFeature",
+      dependencies: [
+        .product(name: "Kingfisher", package: "Kingfisher"),
+      ]
     ),
     .target(
       name: "MainTabFeature",
