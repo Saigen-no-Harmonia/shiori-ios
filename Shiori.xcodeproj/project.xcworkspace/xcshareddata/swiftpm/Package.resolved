@@ -1,5 +1,5 @@
 {
-  "originHash" : "7d0e6412ce996053e3fab32b845d2b9e038b1a1c63cdbc538c968af56f7e9b75",
+  "originHash" : "00051ae29fbd1aa5c872fc64445da5ee9def3a86c879e3ec731f97a188d08ee2",
   "pins" : [
     {
       "identity" : "collectionconcurrencykit",
@@ -26,6 +26,24 @@
       "state" : {
         "revision" : "e45a26384239e028ec87fbcc788f513b67e10d8f",
         "version" : "1.9.0"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher",
+      "state" : {
+        "revision" : "2015fda791daa72c8058619545a593bf8c1dd59f",
+        "version" : "8.5.0"
+      }
+    },
+    {
+      "identity" : "parchment",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rechsteiner/Parchment",
+      "state" : {
+        "revision" : "c818d07d5d0f30f69472e8c0cf4fb9c246d46678",
+        "version" : "4.1.0"
       }
     },
     {
