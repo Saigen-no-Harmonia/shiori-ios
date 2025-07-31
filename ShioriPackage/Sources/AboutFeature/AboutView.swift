@@ -11,7 +11,22 @@ public struct AboutView: View {
   public init () {}
 
   public var body: some View {
-    Text("About")
+    NavigationStack {
+      List {
+        Text("ライセンス情報")
+        HStack {
+          Text("バージョン")
+          Spacer()
+          Text("v1.0.0")
+        }
+        HStack {
+          Text("ソースコード")
+          Spacer()
+          Text("")
+        }
+      }
+      .navigationTitle("アプリについて")
+    }
   }
 }
 
