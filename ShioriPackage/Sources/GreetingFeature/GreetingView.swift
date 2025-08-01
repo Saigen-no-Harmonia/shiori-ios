@@ -7,6 +7,7 @@
 
 import Kingfisher
 import SwiftUI
+import Utility
 
 public struct GreetingView: View {
   public init () {}
@@ -18,17 +19,10 @@ public struct GreetingView: View {
           .aspectRatio(contentMode: .fit)
         LinearGradient(colors: [.clear, .white], startPoint: .top, endPoint: .bottom)
           .padding(.top, 350)
-        Text("ごあいさつ")
-          .font(.system(.largeTitle, design: .serif))
-          .bold()
-          .padding(.bottom, 24)
-          .foregroundColor(Color("text-primary-color", bundle: .main))
+        LargeTitleBoldText("ごあいさつ")
       }
       .fixedSize()
-      Text("本日はおひがらもよく、云々。本日はおひがらもよく、云々。本日はおひがらもよく、云々。本日はおひがらもよく、云々。本日はおひがらもよく、云々。本日はおひがらもよく、云々。")
-        .font(.system(.title3, design: .serif))
-        .padding(.horizontal, 24)
-        .foregroundColor(Color("text-primary-color", bundle: .main))
+      Title3Text("本日はおひがらもよく、云々。本日はおひがらもよく、云々。本日はおひがらもよく、云々。本日はおひがらもよく、云々。本日はおひがらもよく、云々。本日はおひがらもよく、云々。")
       Spacer()
     }
     .ignoresSafeArea()

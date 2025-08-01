@@ -29,6 +29,9 @@ let package = Package(
   targets: [
     .target(
       name: "AboutFeature",
+      dependencies: [
+        "Utility",
+      ]
     ),
     .target(
       name: "AccessFeature",
@@ -43,6 +46,7 @@ let package = Package(
       name: "GreetingFeature",
       dependencies: [
         .product(name: "Kingfisher", package: "Kingfisher"),
+        "Utility",
       ]
     ),
     .target(
@@ -53,6 +57,7 @@ let package = Package(
         "GreetingFeature",
         "PhotoGalleryFeature",
         "ProfileFeature",
+        "Utility",
       ]
     ),
     .target(
@@ -60,6 +65,9 @@ let package = Package(
     ),
     .target(
       name: "ProfileFeature",
+    ),
+    .target(
+      name: "Utility",
     ),
     .testTarget(
       name: "ShioriPackageTests",

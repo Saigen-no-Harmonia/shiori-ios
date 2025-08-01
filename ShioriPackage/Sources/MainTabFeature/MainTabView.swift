@@ -11,9 +11,12 @@ import GreetingFeature
 import PhotoGalleryFeature
 import ProfileFeature
 import SwiftUI
+import Utility
 
 public struct MainTabView: View {
-  public init () {}
+  public init () {
+    UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "HiraMinProN-W6", size: 10)! ], for: .normal)
+  }
   
   public var body: some View {
     TabView {
@@ -43,7 +46,7 @@ public struct MainTabView: View {
           Text("アプリについて")
         }
     }
-    .tint(Color("primary-color", bundle: .main))
+    .tint(Colors.primary.color)
   }
 }
 
