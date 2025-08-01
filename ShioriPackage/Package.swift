@@ -25,6 +25,7 @@ let package = Package(
     .package(url: "https://github.com/realm/SwiftLint", exact: "0.59.1"),
     .package(url: "https://github.com/onevcat/Kingfisher", exact: "8.5.0"),
     .package(url: "https://github.com/rechsteiner/Parchment", exact: "4.1.0"),
+    .package(url: "https://github.com/pointfreeco/swift-tagged", exact: "0.10.0"),
   ],
   targets: [
     .target(
@@ -68,6 +69,7 @@ let package = Package(
       dependencies: [
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "Parchment", package: "Parchment"),
+        .product(name: "Tagged", package: "swift-tagged"),
         "Utility",
       ]
     ),
