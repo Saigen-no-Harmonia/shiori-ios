@@ -5,13 +5,23 @@
 //  Created by canacel on 2025/07/27.
 //
 
+import Kingfisher
+import Parchment
 import SwiftUI
+import Utility
 
 public struct ProfileView: View {
   public init () {}
 
   public var body: some View {
-    Text("Profile")
+    PageView {
+      Page("ほげ家") {
+        Text("Page 0")
+      }
+      Page("ふが家") {
+        Text("Page 1")
+      }
+    }
   }
 }
 

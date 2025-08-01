@@ -65,6 +65,11 @@ let package = Package(
     ),
     .target(
       name: "ProfileFeature",
+      dependencies: [
+        .product(name: "Kingfisher", package: "Kingfisher"),
+        .product(name: "Parchment", package: "Parchment"),
+        "Utility",
+      ]
     ),
     .target(
       name: "Utility",
