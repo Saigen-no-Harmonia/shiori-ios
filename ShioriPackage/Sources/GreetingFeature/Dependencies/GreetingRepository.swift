@@ -14,7 +14,7 @@ struct GreetingRepository: Sendable {
 }
 
 extension GreetingRepository: DependencyKey {
-  static let liveValue = Self(getGreeting: {  await mock })
+  static let liveValue = Self(getGreeting: { await mock })
   static let testValue = Self(getGreeting: { await mock })
 }
 

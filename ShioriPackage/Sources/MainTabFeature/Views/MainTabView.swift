@@ -15,9 +15,6 @@ import SwiftUI
 import Utility
 
 public struct MainTabView: View {
-  let greetingStore: StoreOf<GreetingStore> = .init(initialState: GreetingStore.State()) {
-    GreetingStore()
-  }
   public init () {
     UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "HiraMinProN-W6", size: 10)! ], for: .normal)
   }
@@ -33,11 +30,15 @@ public struct MainTabView: View {
         Image(systemName: "greetingcard.fill")
         Text("ごあいさつ")
       }
-      ProfileView()
-        .tabItem {
-          Image(systemName: "person.fill")
-          Text("プロフィール")
+      ProfileView(store: StoreOf<ProfileStore>(
+        initialState: ProfileStore.State()) {
+          ProfileStore()
         }
+      )
+      .tabItem {
+        Image(systemName: "person.fill")
+        Text("プロフィール")
+      }
       PhotoGalleryView()
         .tabItem {
           Image(systemName: "photo")
