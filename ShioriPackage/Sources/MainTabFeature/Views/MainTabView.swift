@@ -7,6 +7,7 @@
 
 import AboutFeature
 import AccessFeature
+import ComposableArchitecture
 import GreetingFeature
 import PhotoGalleryFeature
 import ProfileFeature
@@ -14,17 +15,24 @@ import SwiftUI
 import Utility
 
 public struct MainTabView: View {
+  let greetingStore: StoreOf<GreetingStore> = .init(initialState: GreetingStore.State()) {
+    GreetingStore()
+  }
   public init () {
     UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "HiraMinProN-W6", size: 10)! ], for: .normal)
   }
   
   public var body: some View {
     TabView {
-      GreetingView()
-        .tabItem {
-          Image(systemName: "greetingcard.fill")
-          Text("ごあいさつ")
+      GreetingView(store: StoreOf<GreetingStore>(
+        initialState: GreetingStore.State()) {
+          GreetingStore()
         }
+      )
+      .tabItem {
+        Image(systemName: "greetingcard.fill")
+        Text("ごあいさつ")
+      }
       ProfileView()
         .tabItem {
           Image(systemName: "person.fill")

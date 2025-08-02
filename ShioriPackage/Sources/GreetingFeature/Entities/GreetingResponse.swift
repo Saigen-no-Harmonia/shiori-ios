@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GreetingResponse: Decodable {
+public struct GreetingResponse: Decodable, Sendable {
   let greeting: Greeting
   let photo: GreetingPhoto
 
