@@ -31,21 +31,27 @@ let package = Package(
     .target(
       name: "AboutFeature",
       dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         "Utility",
       ]
     ),
     .target(
       name: "AccessFeature",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ]
     ),
     .target(
       name: "AppFeature",
       dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         "MainTabFeature"
       ]
     ),
     .target(
       name: "GreetingFeature",
       dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Kingfisher", package: "Kingfisher"),
         "Utility",
       ]
@@ -63,10 +69,14 @@ let package = Package(
     ),
     .target(
       name: "PhotoGalleryFeature",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ]
     ),
     .target(
       name: "ProfileFeature",
       dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "Parchment", package: "Parchment"),
         .product(name: "Tagged", package: "swift-tagged"),
