@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct GalleryPhotos: Decodable {
+public struct GalleryPhotos: Decodable, Equatable, Sendable {
   let galleryPhotos: [GalleryPhoto]
 }

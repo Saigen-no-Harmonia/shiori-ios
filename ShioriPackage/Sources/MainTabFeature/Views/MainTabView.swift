@@ -39,11 +39,15 @@ public struct MainTabView: View {
         Image(systemName: "person.fill")
         Text("プロフィール")
       }
-      PhotoGalleryView()
-        .tabItem {
-          Image(systemName: "photo")
-          Text("フォトギャラリー")
+      PhotoGalleryView(store: StoreOf<PhotoGalleryStore>(
+        initialState: PhotoGalleryStore.State()) {
+          PhotoGalleryStore()
         }
+      )
+      .tabItem {
+        Image(systemName: "photo")
+        Text("フォトギャラリー")
+      }
       AccessView()
         .tabItem {
           Image(systemName: "location.fill")

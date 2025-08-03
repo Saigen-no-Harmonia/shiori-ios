@@ -8,7 +8,7 @@
 import Foundation
 import Tagged
 
-struct GalleryPhoto: Decodable {
+struct GalleryPhoto: Decodable, Equatable {
   typealias ID = Tagged<Self, String>
 
   let id: ID

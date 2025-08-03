@@ -71,6 +71,9 @@ let package = Package(
       name: "PhotoGalleryFeature",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "Kingfisher", package: "Kingfisher"),
+        .product(name: "Tagged", package: "swift-tagged"),
+        "Utility",
       ]
     ),
     .target(
