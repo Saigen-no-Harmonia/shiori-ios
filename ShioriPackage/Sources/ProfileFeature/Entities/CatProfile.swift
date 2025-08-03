@@ -1,5 +1,5 @@
 //
-//  NekoProfile.swift
+//  CatProfile.swift
 //  ShioriPackage
 //
 //  Created by canacel on 2025/08/01.
@@ -8,7 +8,7 @@
 import Foundation
 import Tagged
 
-struct NekoProfile: Decodable {
+struct CatProfile: Decodable, Equatable {
   typealias ID = Tagged<Self, String>
 
   let id: ID

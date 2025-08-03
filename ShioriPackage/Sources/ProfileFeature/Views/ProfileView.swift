@@ -15,6 +15,8 @@ import Utility
 public struct ProfileStore: Sendable {
   @ObservableState
   public struct State: Equatable {
+    var profiles: [Family] = []
+
     public init() {}
   }
   
@@ -37,6 +39,7 @@ public struct ProfileStore: Sendable {
           }))
         }
       case let .profileResponse(.success(response)):
+        state.profiles = response.families
         return .none
       case .profileResponse:
         return .none
@@ -53,13 +56,29 @@ public struct ProfileView: View {
   }
 
   public var body: some View {
-    PageView {
-      Page("ほげ家") {
-        Text("Page 0")
+    VStack {
+      if !store.state.profiles.isEmpty {
+        PageView(store.state.profiles, id: \.id) { profile in
+          Page("\(profile.name)家") {
+            ScrollView {
+              PresenterProfileView(profile: profile.presenter)
+              ForEach(profile.participants, id: \.id) { participant in
+                ParticipantProfileView(profile: participant)
+              }
+              if let cats = profile.cats {
+                ForEach(cats, id: \.id) { cat in
+                  CatProfileView(profile: cat)
+                }
+              }
+            }
+          }
+        }
+        .menuHorizontalAlignment(.center)
+        .indicatorColor(Colors.primary.color)
       }
-      Page("ふが家") {
-        Text("Page 1")
-      }
+    }
+    .onFirstAppear {
+      store.send(.onFirstAppear)
     }
   }
 }

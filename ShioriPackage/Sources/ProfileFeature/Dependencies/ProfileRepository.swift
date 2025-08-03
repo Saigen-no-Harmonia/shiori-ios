@@ -22,7 +22,7 @@ extension ProfileRepository {
   @MainActor static let mock = Families(
     families: [
       Family(id: "1",
-             name: "ほげ",
+             name: "山田",
              presenter: PresenterProfile(birthDate: "2020-01-01",
                                          birthPlace: "地球",
                                          firstName: "山田",
@@ -63,9 +63,9 @@ extension ProfileRepository {
                                   photoURL: URL(string: "https://placehold.jp/500x500.png")!,
                                   relation: "母")
              ],
-             nekos: nil),
+             cats: nil),
       Family(id: "2",
-             name: "ふが",
+             name: "田中",
              presenter: PresenterProfile(birthDate: "2020-01-01",
                                          birthPlace: "太陽系",
                                          firstName: "田中",
@@ -119,19 +119,19 @@ extension ProfileRepository {
                                   photoURL: URL(string: "https://placehold.jp/500x500.png")!,
                                   relation: "妹"),
              ],
-             nekos: [
-               NekoProfile(id: "1",
-                           age: 10,
-                           likeFood: "ししゃも",
-                           name: "ささみ",
-                           photoURL: URL(string: "https://placehold.jp/500x500.png")!,
-                           temperament: "かわいい"),
-               NekoProfile(id: "2",
-                           age: 20,
-                           likeFood: "ながいも",
-                           name: "しらす",
-                           photoURL: URL(string: "https://placehold.jp/500x500.png")!,
-                           temperament: "とてもかわいい")
+             cats: [
+               CatProfile(id: "1",
+                          age: 10,
+                          likeFood: "ししゃも",
+                          name: "ささみ",
+                          photoURL: URL(string: "https://placehold.jp/500x500.png")!,
+                          temperament: "かわいい"),
+               CatProfile(id: "2",
+                          age: 20,
+                          likeFood: "ながいも",
+                          name: "しらす",
+                          photoURL: URL(string: "https://placehold.jp/500x500.png")!,
+                          temperament: "とてもかわいい")
              ])
     ]
   )

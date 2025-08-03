@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PresenterProfile: Decodable {
+struct PresenterProfile: Decodable, Equatable {
   let birthDate: String
   let birthPlace: String
   let firstName: String

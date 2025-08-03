@@ -7,6 +7,6 @@
 
 import Foundation
 
-public struct Families: Decodable, Sendable {
+public struct Families: Decodable, Sendable, Equatable {
   let families: [Family]
 }
