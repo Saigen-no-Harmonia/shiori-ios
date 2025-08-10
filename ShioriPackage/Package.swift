@@ -39,6 +39,7 @@ let package = Package(
       name: "AccessFeature",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        "Utility",
       ]
     ),
     .target(

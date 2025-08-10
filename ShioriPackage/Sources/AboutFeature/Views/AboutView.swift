@@ -26,6 +26,7 @@ public struct AboutView: View {
         }
       }
       .navigationTitle("アプリについて")
+      .toolbarBackground(.white, for: .navigationBar)
     }
   }
 }
