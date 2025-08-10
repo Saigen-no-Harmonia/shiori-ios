@@ -75,8 +75,11 @@ public struct ProfileView: View {
         }
         .menuHorizontalAlignment(.center)
         .indicatorColor(Colors.primary.color)
+      } else {
+        ContentUnavailableView("読み込み中...", image: "")
       }
     }
+    .background(Colors.background.color)
     .onFirstAppear {
       store.send(.onFirstAppear)
     }

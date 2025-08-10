@@ -61,7 +61,7 @@ public struct GreetingView: View {
       ZStack(alignment: .bottom) {
         KFImage(store.photoURL)
           .aspectRatio(contentMode: .fit)
-        LinearGradient(colors: [.clear, .white], startPoint: .top, endPoint: .bottom)
+        LinearGradient(colors: [.clear, Colors.background.color], startPoint: .top, endPoint: .bottom)
           .padding(.top, 350)
         LargeTitleBoldText("ごあいさつ")
       }
@@ -70,6 +70,7 @@ public struct GreetingView: View {
       Spacer()
     }
     .ignoresSafeArea()
+    .background(Colors.background.color)
     .onFirstAppear {
       store.send(.onFirstAppear)
     }

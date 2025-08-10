@@ -66,6 +66,7 @@ public struct PhotoGalleryView: View {
               .clipped()
           }
         }
+        .background(Colors.background.color)
       }
     }
     .onFirstAppear {

@@ -57,11 +57,15 @@ public struct MainTabView: View {
           Image(systemName: "location.fill")
           Text("アクセス")
         }
-      AboutView()
-        .tabItem {
-          Image(systemName: "info.circle.fill")
-          Text("アプリについて")
+      AboutView(store: StoreOf<AboutStore>(
+        initialState: AboutStore.State()) {
+          AboutStore()
         }
+      )
+      .tabItem {
+        Image(systemName: "info.circle.fill")
+        Text("アプリについて")
+      }
     }
     .tint(Colors.primary.color)
   }

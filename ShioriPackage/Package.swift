@@ -26,12 +26,14 @@ let package = Package(
     .package(url: "https://github.com/onevcat/Kingfisher", exact: "8.5.0"),
     .package(url: "https://github.com/rechsteiner/Parchment", exact: "4.1.0"),
     .package(url: "https://github.com/pointfreeco/swift-tagged", exact: "0.10.0"),
+    .package(url: "https://github.com/cybozu/LicenseList", exact: "2.1.0"),
   ],
   targets: [
     .target(
       name: "AboutFeature",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        .product(name: "LicenseList", package: "LicenseList"),
         "Utility",
       ]
     ),

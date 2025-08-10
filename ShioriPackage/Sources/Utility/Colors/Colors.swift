@@ -11,6 +11,7 @@ public enum Colors {
   case primary
   case secondary
   case textPrimary
+  case background
 
   public var color: Color {
     switch self {
@@ -20,6 +21,8 @@ public enum Colors {
       return Color(cgColor: .init(red: 168 / 255, green: 201 / 255, blue: 127 / 255, alpha: 1.0))
     case .textPrimary:
       return Color(cgColor: .init(red: 33 / 255, green: 33 / 255, blue: 33 / 255, alpha: 1.0))
+    case .background:
+      return Color(cgColor: .init(red: 253 / 255, green: 255 / 255, blue: 240 / 255, alpha: 1.0))
     }
   }
 }
