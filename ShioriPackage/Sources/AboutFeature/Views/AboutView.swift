@@ -43,56 +43,58 @@ public struct AboutView: View {
 
   public init(store: StoreOf<AboutStore>) {
     self.store = store
-    UITableView.appearance().backgroundColor = .orange
   }
 
   public var body: some View {
     NavigationStack {
-      List {
-        Section {
-          NavigationLink {
-            LicenseListView()
-              .navigationTitle("ライセンス情報")
-          } label: {
+      ZStack {
+        Colors.background.color.ignoresSafeArea()
+        List {
+          Section {
+            NavigationLink {
+              LicenseListView()
+                .navigationTitle("ライセンス情報")
+            } label: {
+              HStack {
+                Image(systemName: "licenseplate")
+                  .frame(width: 18, height: 18)
+                BodyText("ライセンス情報")
+              }
+            }
             HStack {
-              Image(systemName: "licenseplate")
-                .frame(width: 18, height: 18)
-              BodyText("ライセンス情報")
+              HStack {
+                Image(systemName: "text.page")
+                  .frame(width: 18, height: 18)
+                BodyText("ソースコード (iOS)")
+              }
+              Spacer()
+              Text("")
+            }
+            HStack {
+              HStack {
+                Image(systemName: "text.page")
+                  .frame(width: 18, height: 18)
+                BodyText("ソースコード (サーバー)")
+              }
+              Spacer()
+              Text("")
+            }
+            HStack {
+              HStack {
+                Image(systemName: "tag.fill")
+                  .frame(width: 18, height: 18)
+                BodyText("アプリバージョン")
+              }
+              Spacer()
+              BodyText(store.state.version)
             }
           }
-          HStack {
-            HStack {
-              Image(systemName: "text.page")
-                .frame(width: 18, height: 18)
-              BodyText("ソースコード (iOS)")
-            }
-            Spacer()
-            Text("")
-          }
-          HStack {
-            HStack {
-              Image(systemName: "text.page")
-                .frame(width: 18, height: 18)
-              BodyText("ソースコード (サーバー)")
-            }
-            Spacer()
-            Text("")
-          }
-        }
-        Section {
-          HStack {
-            HStack {
-              Image(systemName: "tag.fill")
-                .frame(width: 18, height: 18)
-              BodyText("アプリバージョン")
-            }
-            Spacer()
-            BodyText(store.state.version)
-          }
+          .listRowBackground(Colors.background.color)
         }
       }
       .navigationTitle("アプリについて")
     }
+    .scrollContentBackground(.hidden)
     .onFirstAppear {
       store.send(.onFirstAppear)
     }
