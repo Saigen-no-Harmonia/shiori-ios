@@ -10,6 +10,7 @@ import SwiftUI
 public enum Colors {
   case primary
   case secondary
+  case tertiary
   case textPrimary
   case background
 
@@ -19,6 +20,8 @@ public enum Colors {
       return Color(cgColor: .init(red: 201 / 255, green: 127 / 255, blue: 131 / 255, alpha: 1.0))
     case .secondary:
       return Color(cgColor: .init(red: 168 / 255, green: 201 / 255, blue: 127 / 255, alpha: 1.0))
+    case .tertiary:
+      return Color(cgColor: .init(red: 204 / 255, green: 201 / 255, blue: 129 / 255, alpha: 1.0))
     case .textPrimary:
       return Color(cgColor: .init(red: 33 / 255, green: 33 / 255, blue: 33 / 255, alpha: 1.0))
     case .background:

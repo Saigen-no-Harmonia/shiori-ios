@@ -62,6 +62,8 @@ public struct ProfileView: View {
           Page("\(profile.name)家") {
             ScrollView {
               PresenterProfileView(profile: profile.presenter)
+              Divider()
+              Title3BoldText("家族")
               ForEach(profile.participants, id: \.id) { participant in
                 ParticipantProfileView(profile: participant)
               }
@@ -73,6 +75,7 @@ public struct ProfileView: View {
             }
           }
         }
+        .selectedColor(Colors.primary.color)
         .menuHorizontalAlignment(.center)
         .indicatorColor(Colors.primary.color)
       } else {
