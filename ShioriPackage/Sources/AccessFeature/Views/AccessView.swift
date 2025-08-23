@@ -6,7 +6,6 @@
 //
 
 import ComposableArchitecture
-import MapKit
 import SwiftUI
 import Utility
 
@@ -21,7 +20,6 @@ public struct AccessStore: Sendable {
     var startingDate: String = ""
     var venueURL: URL?
     var venueAddress: String = ""
-    var location: CLLocationCoordinate2D?
 
     public init() {}
   }
@@ -53,7 +51,6 @@ public struct AccessStore: Sendable {
         state.restaurantURL = response.restaurantURL
         state.venueURL = response.venueURL
         state.venueAddress = response.venueAddress
-        state.location = response.toCLLocation()
         return .none
       case .accessResponse:
         return .none
@@ -82,12 +79,6 @@ public struct AccessView: View {
             Title3BoldText(store.state.venueAddress)
           }
         }
-        Map {
-          if let coordinate = store.state.location {
-            Marker("", coordinate: coordinate)
-          }
-        }
-        .frame(height: 150)
         Grid {
           GridRow {
             HeadlineText("集合場所")
@@ -99,9 +90,11 @@ public struct AccessView: View {
           }
         }
         Button("詳細なアクセスはこちら") {}
+        Spacer()
       }
+      .padding()
+      .background(Colors.background.color)
       .navigationTitle("アクセス")
-      .toolbarBackground(.white, for: .navigationBar)
     }
     .onFirstAppear {
       store.send(.onFirstAppear)

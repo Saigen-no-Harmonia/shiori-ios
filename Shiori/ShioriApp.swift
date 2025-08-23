@@ -13,6 +13,7 @@ struct ShioriApp: App {
   var body: some Scene {
     WindowGroup {
       AppView()
+        .preferredColorScheme(.light)
     }
   }
 }

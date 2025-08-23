@@ -17,6 +17,7 @@ import Utility
 public struct MainTabView: View {
   public init () {
     UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "HiraMinProN-W6", size: 10)! ], for: .normal)
+    UITabBar.appearance().backgroundColor = UIColor(Colors.background.color)
   }
   
   public var body: some View {
