@@ -14,7 +14,10 @@ struct PhotoGalleryRepository: Sendable {
 }
 
 extension PhotoGalleryRepository: DependencyKey {
-  static let liveValue = Self(getGalleryPhotos: { await mock })
+  static let liveValue = Self(getGalleryPhotos: {
+    @Dependency(\.apiClient) var apiClient
+    return try await apiClient.request(PhotoGalleryRequest())
+  })
   static let testValue = Self(getGalleryPhotos: { await mock })
 }
 

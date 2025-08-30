@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
+import Utility
 
 @DependencyClient
 struct GreetingRepository: Sendable {
@@ -14,7 +15,10 @@ struct GreetingRepository: Sendable {
 }
 
 extension GreetingRepository: DependencyKey {
-  static let liveValue = Self(getGreeting: { await mock })
+  static let liveValue = Self(getGreeting: {
+    @Dependency(\.apiClient) var apiClient
+    return try await apiClient.request(GreetingRequest())
+  })
   static let testValue = Self(getGreeting: { await mock })
 }
 

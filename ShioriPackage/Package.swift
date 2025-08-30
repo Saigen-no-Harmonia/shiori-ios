@@ -91,6 +91,9 @@ let package = Package(
     ),
     .target(
       name: "Utility",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+      ]
     ),
     .testTarget(
       name: "ShioriPackageTests",

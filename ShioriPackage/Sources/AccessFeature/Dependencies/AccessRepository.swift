@@ -15,15 +15,16 @@ struct AccessRepository: Sendable {
 }
 
 extension AccessRepository: DependencyKey {
-  static let liveValue = Self(getAccess: { await mock })
+  static let liveValue = Self(getAccess: {
+    @Dependency(\.apiClient) var apiClient
+    return try await apiClient.request(AccessRequest())
+  })
   static let testValue = Self(getAccess: { await mock })
 }
 
 extension AccessRepository {
   @MainActor static let mock = Access(gatheringDate: Date.now,
                                       gatheringSpot: "皇居前",
-                                      latitude: CLLocationDegrees(35.685175),
-                                      longitude: CLLocationDegrees(139.7527995),
                                       restaurantName: "皇居レストラン KOKYO",
                                       restaurantURL: URL(string: "https://example/com")!,
                                       startingDate: Date.now,

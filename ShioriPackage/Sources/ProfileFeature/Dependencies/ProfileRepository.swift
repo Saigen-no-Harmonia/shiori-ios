@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
+import Utility
 
 @DependencyClient
 struct ProfileRepository: Sendable {
@@ -14,7 +15,10 @@ struct ProfileRepository: Sendable {
 }
 
 extension ProfileRepository: DependencyKey {
-  static let liveValue = Self(getProfile: { await mock })
+  static let liveValue = Self(getProfile: {
+    @Dependency(\.apiClient) var apiClient
+    return try await apiClient.request(ProfileRequest())
+  })
   static let testValue = Self(getProfile: { await mock })
 }
 
