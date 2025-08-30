@@ -6,7 +6,6 @@
 //
 
 import ComposableArchitecture
-import LicenseList
 import SwiftUI
 import Utility
 
@@ -21,8 +20,12 @@ public struct AboutStore: Sendable {
   
   public enum Action {
     case onFirstAppear
+    case tapSourceCodeiOS
+    case tapSourceCodeServer
+    case browserOpenResponse
   }
 
+  @Dependency(\.applicationClient) var applicationClient
   @Dependency(\.bundleClient) var bundleClient
 
   public init() {}
@@ -32,6 +35,22 @@ public struct AboutStore: Sendable {
       switch action {
       case .onFirstAppear:
         state.version = "v\(bundleClient.shortVersionString())"
+        return .none
+      case .tapSourceCodeiOS:
+        return .run { send in
+          let url = URL(string: "https://github.com/Saigen-no-Harmonia/shiori-ios")!
+          guard await applicationClient.canOpenURL(url) else { return }
+          _ = try await applicationClient.open(url)
+          await send(.browserOpenResponse)
+        }
+      case .tapSourceCodeServer:
+        return .run { send in
+          let url = URL(string: "https://github.com/Saigen-no-Harmonia/shiori-server")!
+          guard await applicationClient.canOpenURL(url) else { return }
+          _ = try await applicationClient.open(url)
+          await send(.browserOpenResponse)
+        }
+      case .browserOpenResponse:
         return .none
       }
     }
@@ -49,50 +68,65 @@ public struct AboutView: View {
     NavigationStack {
       ZStack {
         Colors.background.color.ignoresSafeArea()
-        List {
-          Section {
-            NavigationLink {
-              LicenseListView()
-                .navigationTitle("ライセンス情報")
-            } label: {
+        VStack(alignment: .leading, spacing: 0) {
+          TitleBoldText("アプリについて")
+            .padding(.top, 40)
+            .padding(.leading, 24)
+          List {
+            Section {
               HStack {
-                Image(systemName: "licenseplate")
+                HStack {
+                  Image(systemName: "licenseplate")
+                    .frame(width: 18, height: 18)
+                  BodyText("ライセンス情報")
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
                   .frame(width: 18, height: 18)
-                BodyText("ライセンス情報")
+                  .foregroundStyle(.gray)
+              }
+              HStack {
+                HStack {
+                  Image(systemName: "text.page")
+                    .frame(width: 18, height: 18)
+                  BodyText("ソースコード (iOS)")
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                  .frame(width: 18, height: 18)
+                  .foregroundStyle(.gray)
+              }
+              .onTapGesture {
+                store.send(.tapSourceCodeiOS)
+              }
+              HStack {
+                HStack {
+                  Image(systemName: "text.page")
+                    .frame(width: 18, height: 18)
+                  BodyText("ソースコード (サーバー)")
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                  .frame(width: 18, height: 18)
+                  .foregroundStyle(.gray)
+              }
+              .onTapGesture {
+                store.send(.tapSourceCodeServer)
+              }
+              HStack {
+                HStack {
+                  Image(systemName: "tag.fill")
+                    .frame(width: 18, height: 18)
+                  BodyText("アプリバージョン")
+                }
+                Spacer()
+                BodyText(store.state.version)
               }
             }
-            HStack {
-              HStack {
-                Image(systemName: "text.page")
-                  .frame(width: 18, height: 18)
-                BodyText("ソースコード (iOS)")
-              }
-              Spacer()
-              Text("")
-            }
-            HStack {
-              HStack {
-                Image(systemName: "text.page")
-                  .frame(width: 18, height: 18)
-                BodyText("ソースコード (サーバー)")
-              }
-              Spacer()
-              Text("")
-            }
-            HStack {
-              HStack {
-                Image(systemName: "tag.fill")
-                  .frame(width: 18, height: 18)
-                BodyText("アプリバージョン")
-              }
-              Spacer()
-              BodyText(store.state.version)
-            }
+            .listRowBackground(Colors.background.color)
           }
-          .listRowBackground(Colors.background.color)
         }
       }
-      .navigationTitle("アプリについて")
     }
     .scrollContentBackground(.hidden)
     .onFirstAppear {
