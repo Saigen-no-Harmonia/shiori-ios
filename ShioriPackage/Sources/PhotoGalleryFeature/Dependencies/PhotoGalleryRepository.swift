@@ -22,7 +22,7 @@ extension PhotoGalleryRepository: DependencyKey {
 }
 
 extension PhotoGalleryRepository {
-  private static let photos: [GalleryPhoto] = Array(0...19).map { i in
+    @MainActor private static let photos: [GalleryPhoto] = Array(0...19).map { i in
     GalleryPhoto(id: .init(String(i)), url: URL(string: "https://placehold.jp/1920x1080.png")!)
   }
   
