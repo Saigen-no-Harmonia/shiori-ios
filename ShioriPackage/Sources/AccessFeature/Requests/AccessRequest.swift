@@ -15,4 +15,5 @@ struct AccessRequest: ShioriRequestProtocol {
   var path: Endpoint = .access
   var headers: [String : String]? = nil
   var body: Data? = nil
+  var queryItems: [URLQueryItem]? = nil
 }

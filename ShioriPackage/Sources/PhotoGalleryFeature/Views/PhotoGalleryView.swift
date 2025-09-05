@@ -14,13 +14,18 @@ import Utility
 public struct PhotoGalleryStore: Sendable {
   @ObservableState
   public struct State: Equatable {
+    let limit: Int = 20
     var photos: [GalleryPhoto] = []
+    var offset: Int = 0
+    var isAllLoaded: Bool = false
 
     public init() {}
   }
   
   public enum Action {
     case onFirstAppear
+    case reachedLastPhoto
+    case fetchPhotos
     case photoGalleryResponse(Result<GalleryPhotos, Error>)
   }
   
@@ -33,12 +38,25 @@ public struct PhotoGalleryStore: Sendable {
       switch action {
       case .onFirstAppear:
         return .run { send in
+          await send(.fetchPhotos)
+        }
+      case .reachedLastPhoto:
+        if state.isAllLoaded { return .none }
+        return .run { send in
+          await send(.fetchPhotos)
+        }
+      case .fetchPhotos:
+        return .run { [limit = state.limit, offset = state.offset] send in
           await send(.photoGalleryResponse(Result {
-            try await photoGalleryRepository.getGalleryPhotos()
+            try await photoGalleryRepository.getGalleryPhotos(limit, offset)
           }))
         }
       case let .photoGalleryResponse(.success(response)):
-        state.photos = response.galleryPhotos
+        state.photos += response.galleryPhotos
+        state.offset += response.galleryPhotos.count
+        if response.galleryPhotos.isEmpty {
+          state.isAllLoaded = true
+        }
         return .none
       case .photoGalleryResponse:
         return .none
@@ -64,6 +82,11 @@ public struct PhotoGalleryView: View {
               .scaledToFill()
               .frame(width: geometry.size.width / 2, height: geometry.size.width / 2)
               .clipped()
+              .onAppear {
+                if photo == store.state.photos.last {
+                  store.send(.reachedLastPhoto)
+                }
+              }
           }
         }
       }

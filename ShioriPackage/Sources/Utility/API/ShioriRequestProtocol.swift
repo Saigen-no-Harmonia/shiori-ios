@@ -14,4 +14,5 @@ public protocol ShioriRequestProtocol {
   var method: HTTPMethod { get set }
   var headers: [String: String]? { get set }
   var body: Data? { get set }
+  var queryItems: [URLQueryItem]? { get set }
 }

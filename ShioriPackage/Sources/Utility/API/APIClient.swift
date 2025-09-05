@@ -37,7 +37,14 @@ extension APIClient: DependencyKey {
       let baseURL = await MainActor.run {
         CREDENTIALS.shared["API_BASE_URL"] as! String
       }
-      guard let url = URL(string: baseURL + shioriRequest.path.rawValue) else {
+
+      var queryString = ""
+      if let queryItems = shioriRequest.queryItems, !queryItems.isEmpty {
+        let queries = queryItems.map(\.description).joined(separator: "&")
+        queryString = "?\(queries)"
+      }
+
+      guard let url = URL(string: baseURL + shioriRequest.path.rawValue + queryString) else {
         Logger.standard.debug("invalidURL")
         throw APIError.invalidURL
       }

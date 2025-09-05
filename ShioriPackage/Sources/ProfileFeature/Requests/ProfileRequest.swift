@@ -15,4 +15,5 @@ struct ProfileRequest: ShioriRequestProtocol {
   var path: Endpoint = .profile
   var headers: [String : String]? = nil
   var body: Data? = nil
+  var queryItems: [URLQueryItem]? = nil
 }

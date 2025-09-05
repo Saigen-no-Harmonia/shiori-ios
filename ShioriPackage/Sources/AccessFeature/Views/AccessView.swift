@@ -20,6 +20,7 @@ public struct AccessStore: Sendable {
     var startingDate: String = ""
     var venueURL: URL?
     var venueAddress: String = ""
+    var isLoading: Bool = false
 
     public init() {}
   }
@@ -38,6 +39,7 @@ public struct AccessStore: Sendable {
     Reduce { state, action in
       switch action {
       case .onFirstAppear:
+        state.isLoading = true
         return .run { send in
           await send(.accessResponse(Result {
             try await accessRepository.getAccess()
@@ -51,8 +53,10 @@ public struct AccessStore: Sendable {
         state.restaurantURL = response.restaurantURL
         state.venueURL = response.venueURL
         state.venueAddress = response.venueAddress
+        state.isLoading = false
         return .none
       case .accessResponse:
+        state.isLoading = false
         return .none
       }
     }
@@ -67,35 +71,46 @@ public struct AccessView: View {
   }
 
   public var body: some View {
-    NavigationStack {
-      VStack {
-        Grid {
-          GridRow {
-            HeadlineText("会場名")
-            Title3BoldText(store.state.restaurantName)
+    VStack(alignment: .leading, spacing: 0) {
+      if store.isLoading {
+        ProgressView()
+          .tint(Colors.primary.color)
+      } else {
+        VStack(alignment: .leading) {
+          TitleBoldText("アクセス")
+            .padding(.bottom, 24)
+          Grid {
+            GridRow {
+              HeadlineText("会場名")
+                .frame(width: 90)
+              Title3BoldText(store.state.restaurantName)
+            }
+            .padding(.bottom, 24)
+            GridRow {
+              HeadlineText("住所")
+              Title3BoldText(store.state.venueAddress)
+            }
+            .padding(.bottom, 24)
           }
-          GridRow {
-            HeadlineText("住所")
-            Title3BoldText(store.state.venueAddress)
+          Grid {
+            GridRow {
+              HeadlineText("集合場所")
+                .frame(width: 90)
+              Title3BoldText(store.state.gatheringSpot)
+            }
+            .padding(.bottom, 24)
+            GridRow {
+              HeadlineText("集合時間")
+              Title3BoldText(store.state.gatheringDate)
+            }
+            .padding(.bottom, 24)
           }
+          Button("詳細なアクセスはこちら") {}
+          Spacer()
         }
-        Grid {
-          GridRow {
-            HeadlineText("集合場所")
-            Title3BoldText(store.state.gatheringSpot)
-          }
-          GridRow {
-            HeadlineText("集合時間")
-            Title3BoldText(store.state.gatheringDate)
-          }
-        }
-        Button("詳細なアクセスはこちら") {}
-        Spacer()
       }
-      .padding()
-      .background(Colors.background.color)
-      .navigationTitle("アクセス")
     }
+    .background(Colors.background.color)
     .onFirstAppear {
       store.send(.onFirstAppear)
     }

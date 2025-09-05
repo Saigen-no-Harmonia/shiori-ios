@@ -15,4 +15,5 @@ struct GreetingRequest: ShioriRequestProtocol {
   var path: Endpoint = .greeting
   var headers: [String : String]? = nil
   var body: Data? = nil
+  var queryItems: [URLQueryItem]? = nil
 }

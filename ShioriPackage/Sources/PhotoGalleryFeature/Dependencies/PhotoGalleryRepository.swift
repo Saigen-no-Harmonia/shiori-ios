@@ -10,15 +10,15 @@ import Foundation
 
 @DependencyClient
 struct PhotoGalleryRepository: Sendable {
-  var getGalleryPhotos: @Sendable () async throws -> GalleryPhotos
+  var getGalleryPhotos: @Sendable (_ limit: Int, _ offset: Int) async throws -> GalleryPhotos
 }
 
 extension PhotoGalleryRepository: DependencyKey {
-  static let liveValue = Self(getGalleryPhotos: {
+  static let liveValue = Self(getGalleryPhotos: { limit, offset in
     @Dependency(\.apiClient) var apiClient
-    return try await apiClient.request(PhotoGalleryRequest())
+    return try await apiClient.request(PhotoGalleryRequest(limit: limit, offset: offset))
   })
-  static let testValue = Self(getGalleryPhotos: { await mock })
+  static let testValue = Self(getGalleryPhotos: { _, _ in await mock })
 }
 
 extension PhotoGalleryRepository {

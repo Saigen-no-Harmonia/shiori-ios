@@ -77,6 +77,7 @@ public struct GreetingView: View {
                        height: reader.size.height / 2)
                 .clipped()
               LinearGradient(colors: [.clear, Colors.background.color], startPoint: .top, endPoint: .bottom)
+                .padding(.top, 250)
               LargeTitleBoldText("ごあいさつ")
                 .padding(.bottom, 24)
             }

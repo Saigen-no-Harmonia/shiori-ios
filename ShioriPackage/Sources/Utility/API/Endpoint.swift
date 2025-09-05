@@ -6,7 +6,7 @@
 //
 
 public enum Endpoint: String {
-  case greeting = ""
+  case greeting = "top"
   case profile = "families"
   case photoGallery = "gallery"
   case access = "access"
