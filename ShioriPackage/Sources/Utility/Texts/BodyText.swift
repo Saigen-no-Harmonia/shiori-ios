@@ -9,14 +9,16 @@ import SwiftUI
 
 public struct BodyText: View {
   var text: String
+  var color: Colors
 
-  public init (_ text: String) {
+  public init (_ text: String, color: Colors = .textPrimary) {
     self.text = text
+    self.color = color
   }
 
   public var body: some View {
     Text(text)
       .font(.system(.body, design: .serif))
-      .foregroundStyle(Colors.textPrimary.color)
+      .foregroundStyle(color.color)
   }
 }

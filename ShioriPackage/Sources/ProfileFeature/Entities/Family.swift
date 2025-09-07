@@ -8,7 +8,7 @@
 import Foundation
 import Tagged
 
-struct Family: Decodable, Equatable{
+struct Family: Decodable, Equatable, Sendable {
   typealias ID = Tagged<Self, String>
 
   let id: ID

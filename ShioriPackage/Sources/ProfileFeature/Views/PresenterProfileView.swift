@@ -17,41 +17,59 @@ struct PresenterProfileView: View {
       VStack(alignment: .leading) {
         KFImage(profile.photoURL)
           .resizable()
-          .frame(width: 300, height: 300)
           .aspectRatio(contentMode: .fit)
-        Title3BoldText(profile.firstNameKana + " " + profile.lastNameKana)
+          .clipped()
+          .border(Colors.tertiary.color, width: 1)
+        CalloutBoldText(profile.firstNameKana + " " + profile.lastNameKana)
         TitleBoldText(profile.firstName + " " + profile.lastName)
           .padding(.bottom, 12)
-        Grid(verticalSpacing: 8) {
-          GridRow {
-            HeadlineText("何と呼ばれているか")
-            BodyText(profile.nickName)
-          }
-          GridRow {
-            HeadlineText("誕生日")
-            BodyText(profile.birthDate)
-          }
-          GridRow {
-            HeadlineText("出身地")
-            BodyText(profile.birthPlace)
-          }
-          GridRow {
-            HeadlineText("お仕事")
-            BodyText(profile.job)
-          }
-          GridRow {
-            HeadlineText("趣味")
-            BodyText(profile.hobby)
-          }
-          GridRow {
-            HeadlineText("好きなラーメン")
-            BodyText(profile.ramen)
-          }
-          GridRow {
-            HeadlineText("相手の好きなところ")
-            BodyText(profile.likeBy)
-          }
-        }
+        QuestionTitleView(text: "何と呼ばれているか")
+          .padding(.bottom, 8)
+        BodyText(profile.nickName)
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
+        Divider()
+          .padding(.bottom, 8)
+        QuestionTitleView(text: "誕生日")
+          .padding(.bottom, 8)
+        BodyText(DateFormatter.yearMonthDay.string(from: profile.birthDate))
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
+        Divider()
+          .padding(.bottom, 8)
+        QuestionTitleView(text: "出身地")
+          .padding(.bottom, 8)
+        BodyText(profile.birthPlace)
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
+        Divider()
+          .padding(.bottom, 6)
+        QuestionTitleView(text: "お仕事")
+          .padding(.bottom, 8)
+        BodyText(profile.job)
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
+        Divider()
+          .padding(.bottom, 8)
+        QuestionTitleView(text: "趣味")
+          .padding(.bottom, 8)
+        BodyText(profile.hobby)
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
+        Divider()
+          .padding(.bottom, 8)
+        QuestionTitleView(text: "好きなラーメン")
+          .padding(.bottom, 8)
+        BodyText(profile.ramen)
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
+        Divider()
+          .padding(.bottom, 8)
+        QuestionTitleView(text: "相手の好きなところ")
+          .padding(.bottom, 8)
+        BodyText(profile.likeBy)
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
       }
     }
     .groupBoxStyle(ProfileGroupBoxStyle())

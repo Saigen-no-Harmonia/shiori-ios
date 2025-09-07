@@ -17,4 +17,14 @@ extension DateFormatter {
     dateFormatter.dateFormat = "yyyy年M月d日 HH:mm"
     return dateFormatter
   }()
+
+  // yyyy年M月d日
+  public static let yearMonthDay: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    dateFormatter.locale = Locale(identifier: "ja_JP")
+    dateFormatter.timeZone = TimeZone(identifier: "Asia/Tokyo")
+    dateFormatter.calendar = .init(identifier: .gregorian)
+    dateFormatter.dateFormat = "yyyy年M月d日"
+    return dateFormatter
+  }()
 }

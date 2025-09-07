@@ -8,7 +8,7 @@
 import Foundation
 
 struct PresenterProfile: Decodable, Equatable {
-  let birthDate: String
+  let birthDate: Date
   let birthPlace: String
   let firstName: String
   let firstNameKana: String

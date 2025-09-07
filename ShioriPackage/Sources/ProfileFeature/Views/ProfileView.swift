@@ -63,7 +63,8 @@ public struct ProfileView: View {
             ScrollView {
               PresenterProfileView(profile: profile.presenter)
               Divider()
-              Title3BoldText("家族")
+                .padding(.bottom, 24)
+              Title3BoldText("ご家族")
               ForEach(profile.participants, id: \.id) { participant in
                 ParticipantProfileView(profile: participant)
               }

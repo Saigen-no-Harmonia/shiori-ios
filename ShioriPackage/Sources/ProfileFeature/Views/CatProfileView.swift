@@ -18,25 +18,30 @@ struct CatProfileView: View {
         HStack {
           KFImage(profile.photoURL)
             .resizable()
-            .frame(width: 150, height: 150)
             .aspectRatio(contentMode: .fit)
+            .frame(width: 150, height: 150)
           TitleBoldText(profile.name)
         }
         .padding(.bottom, 16)
-        Grid(verticalSpacing: 8) {
-          GridRow {
-            HeadlineText("年齢")
-            BodyText(String(profile.age))
-          }
-          GridRow {
-            HeadlineText("好きな食べ物")
-            BodyText(profile.likeFood)
-          }
-          GridRow {
-            HeadlineText("性格")
-            BodyText(profile.temperament)
-          }
-        }
+        QuestionTitleView(text: "年齢")
+          .padding(.bottom, 8)
+        BodyText(String(profile.age) + "歳")
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
+        Divider()
+          .padding(.bottom, 8)
+        QuestionTitleView(text: "好きな食べ物")
+          .padding(.bottom, 8)
+        BodyText(profile.likeFood)
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
+        Divider()
+          .padding(.bottom, 8)
+        QuestionTitleView(text: "性格")
+          .padding(.bottom, 8)
+        BodyText(profile.temperament)
+          .padding(.bottom, 10)
+          .padding(.leading, 36)
       }
     }
     .groupBoxStyle(ProfileGroupBoxStyle())

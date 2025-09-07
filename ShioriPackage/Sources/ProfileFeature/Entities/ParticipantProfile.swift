@@ -12,7 +12,7 @@ struct ParticipantProfile: Decodable, Equatable {
   typealias ID = Tagged<Self, String>
 
   let id: ID
-  let birthDate: String
+  let birthDate: Date
   let birthPlace: String
   let firstName: String
   let firstNameKana: String
