@@ -18,7 +18,7 @@ struct ShioriApp: App {
     ImageCache.default.memoryStorage.config.expiration = .seconds(300) // 5分
     ImageCache.default.diskStorage.config.sizeLimit = 200 * 1024 * 1024 // 200MB
   }
-  
+
   var body: some Scene {
     WindowGroup {
       AppView()

@@ -18,6 +18,7 @@ public struct PhotoGalleryStore: Sendable {
     var photos: [GalleryPhoto] = []
     var offset: Int = 0
     var isAllLoaded: Bool = false
+    @Presents var sheet: PhotoStore.State?
 
     public init() {}
   }
@@ -28,6 +29,7 @@ public struct PhotoGalleryStore: Sendable {
     case fetchPhotos
     case photoGalleryResponse(Result<GalleryPhotos, Error>)
     case photoTapped(GalleryPhoto)
+    case sheet(PresentationAction<PhotoStore.Action>)
   }
   
   @Dependency(\.photoGalleryRepository) var photoGalleryRepository
@@ -62,8 +64,14 @@ public struct PhotoGalleryStore: Sendable {
       case .photoGalleryResponse:
         return .none
       case let .photoTapped(photo):
+        state.sheet = PhotoStore.State(photo: photo)
+        return .none
+      case .sheet:
         return .none
       }
+    }
+    .ifLet(\.$sheet, action: \.sheet) {
+      PhotoStore()
     }
   }
 }
@@ -91,11 +99,17 @@ public struct PhotoGalleryView: View {
                   store.send(.reachedLastPhoto)
                 }
               }
+              .onTapGesture {
+                store.send(.photoTapped(photo))
+              }
           }
         }
       }
       .background(Colors.background.color)
       .toolbarBackground(Colors.background.color, for: .tabBar)
+    }
+    .sheet(item: $store.scope(state: \.sheet, action: \.sheet)) { store in
+      PhotoView(store: store)
     }
     .onFirstAppear {
       store.send(.onFirstAppear)

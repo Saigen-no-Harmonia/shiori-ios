@@ -22,13 +22,13 @@ public struct PhotoStore: Sendable {
   }
 
   public enum Action: Sendable {
-    case onDisAppear
+    case onDisappear
   }
 
   public var body: some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
-      case .onDisAppear:
+      case .onDisappear:
         return .none
       }
     }
@@ -47,6 +47,11 @@ public struct PhotoView: View {
     KFImage(store.state.photo.url)
       .resizable()
       .scaledToFit()
+      .onDisappear {
+        if store.sendOnDisappear {
+          store.send(.onDisappear)
+        }
+      }
   }
 }
 
