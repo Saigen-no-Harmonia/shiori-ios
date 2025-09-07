@@ -18,8 +18,6 @@ public struct PhotoGalleryStore: Sendable {
     var photos: [GalleryPhoto] = []
     var offset: Int = 0
     var isAllLoaded: Bool = false
-    var path = StackState<PhotoStore.State>()
-    @Presents var navigationDestination: PhotoStore.State?
 
     public init() {}
   }
@@ -30,8 +28,6 @@ public struct PhotoGalleryStore: Sendable {
     case fetchPhotos
     case photoGalleryResponse(Result<GalleryPhotos, Error>)
     case photoTapped(GalleryPhoto)
-    case navigationDestination(PresentationAction<PhotoStore.Action>)
-    case path(StackActionOf<PhotoStore>)
   }
   
   @Dependency(\.photoGalleryRepository) var photoGalleryRepository
@@ -66,56 +62,40 @@ public struct PhotoGalleryStore: Sendable {
       case .photoGalleryResponse:
         return .none
       case let .photoTapped(photo):
-        state.navigationDestination = PhotoStore.State(photo: photo)
-        return .none
-      case .navigationDestination:
-        return .none
-      case .path:
         return .none
       }
-    }
-    .forEach(\.path, action: \.path) {
-      PhotoStore()
-    }
-    .ifLet(\.$navigationDestination, action: \.navigationDestination) {
-      PhotoStore()
     }
   }
 }
 
 public struct PhotoGalleryView: View {
   @State var store: StoreOf<PhotoGalleryStore>
-
+  
   public init(store: StoreOf<PhotoGalleryStore>) {
     self.store = store
   }
-
+  
   public var body: some View {
-    NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-      GeometryReader { geometry in
-        ScrollView {
-          LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
-            ForEach(store.state.photos, id: \.id) { photo in
-              NavigationLink(state: PhotoStore.State(photo: photo)) {
-                KFImage(photo.url)
-                  .resizable()
-                  .scaledToFill()
-                  .frame(width: geometry.size.width / 2, height: geometry.size.width / 2)
-                  .clipped()
-                  .onAppear {
-                    if photo == store.state.photos.last {
-                      store.send(.reachedLastPhoto)
-                    }
-                  }
+    GeometryReader { geometry in
+      ScrollView {
+        LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
+          ForEach(store.state.photos, id: \.id) { photo in
+            KFImage(photo.url)
+              .setProcessor(DownsamplingImageProcessor(size: CGSize(width: geometry.size.width, height: geometry.size.width)))
+              .resizable()
+              .scaledToFill()
+              .frame(width: geometry.size.width / 2, height: geometry.size.width / 2)
+              .clipped()
+              .onAppear {
+                if photo == store.state.photos.last {
+                  store.send(.reachedLastPhoto)
+                }
               }
-            }
           }
         }
-        .background(Colors.background.color)
-        .toolbarBackground(Colors.background.color, for: .tabBar)
       }
-    } destination: { store in
-      PhotoView(store: store)
+      .background(Colors.background.color)
+      .toolbarBackground(Colors.background.color, for: .tabBar)
     }
     .onFirstAppear {
       store.send(.onFirstAppear)
