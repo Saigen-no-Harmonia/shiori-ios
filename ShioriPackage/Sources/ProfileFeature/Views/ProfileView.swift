@@ -80,7 +80,7 @@ public struct ProfileView: View {
         .menuHorizontalAlignment(.center)
         .indicatorColor(Colors.primary.color)
       } else {
-        ContentUnavailableView("読み込み中...", image: "")
+        ShioriProgressView()
       }
     }
     .background(Colors.background.color)

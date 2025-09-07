@@ -63,8 +63,7 @@ public struct GreetingView: View {
   public var body: some View {
     GeometryReader { reader in
       if store.isLoading {
-        ProgressView()
-          .tint(Colors.primary.color)
+        ShioriProgressView()
           .frame(width: reader.size.width, height: reader.size.height, alignment: .center)
       } else {
         ScrollView {
@@ -85,6 +84,7 @@ public struct GreetingView: View {
             BodyText(store.greetingText ?? "")
               .multilineTextAlignment(.center)
               .padding(.horizontal, 24)
+              .padding(.bottom, 140)
           }
         }
       }

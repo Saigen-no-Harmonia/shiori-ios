@@ -18,8 +18,10 @@ struct CatProfileView: View {
         HStack {
           KFImage(profile.photoURL)
             .resizable()
-            .aspectRatio(contentMode: .fit)
+            .aspectRatio(contentMode: .fill)
             .frame(width: 150, height: 150)
+            .clipped()
+            .border(Colors.tertiary.color, width: 1)
           TitleBoldText(profile.name)
         }
         .padding(.bottom, 16)

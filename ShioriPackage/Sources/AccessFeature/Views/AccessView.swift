@@ -95,8 +95,7 @@ public struct AccessView: View {
       Colors.background.color
       VStack(alignment: .leading) {
         if store.isLoading {
-          ProgressView()
-            .tint(Colors.primary.color)
+          ShioriProgressView()
         } else {
           VStack(alignment: .leading) {
             TitleBoldText("会場へのアクセス")

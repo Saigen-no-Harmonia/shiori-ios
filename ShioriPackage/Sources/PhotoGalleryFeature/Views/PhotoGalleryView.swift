@@ -86,9 +86,12 @@ public struct PhotoGalleryView: View {
   public var body: some View {
     GeometryReader { geometry in
       ScrollView {
-        LazyVGrid(columns: Array(repeating: GridItem(), count: 2)) {
+        LazyVGrid(columns: Array(repeating: GridItem(), count: 2), spacing: 4) {
           ForEach(store.state.photos, id: \.id) { photo in
             KFImage(photo.url)
+              .placeholder {
+                ShioriProgressView()
+              }
               .setProcessor(DownsamplingImageProcessor(size: CGSize(width: geometry.size.width, height: geometry.size.width)))
               .resizable()
               .scaledToFill()
