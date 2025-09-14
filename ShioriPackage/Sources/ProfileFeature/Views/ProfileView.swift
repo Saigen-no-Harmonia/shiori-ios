@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import ErrorFeature
 import Kingfisher
 import Parchment
 import SwiftUI
@@ -16,6 +17,8 @@ public struct ProfileStore: Sendable {
   @ObservableState
   public struct State: Equatable {
     var profiles: [Family] = []
+    var error: ErrorStore.State?
+    var isLoading: Bool = false
 
     public init() {}
   }
@@ -23,6 +26,7 @@ public struct ProfileStore: Sendable {
   public enum Action {
     case onFirstAppear
     case profileResponse(Result<Families, Error>)
+    case error(ErrorStore.Action)
   }
   
   @Dependency(\.profileRepository) var profileRepository
@@ -33,17 +37,37 @@ public struct ProfileStore: Sendable {
     Reduce { state, action in
       switch action {
       case .onFirstAppear:
+        state.isLoading = true
         return .run { send in
           await send(.profileResponse(Result {
             try await profileRepository.getProfile()
           }))
         }
       case let .profileResponse(.success(response)):
+        state.isLoading = false
         state.profiles = response.families
         return .none
+      case .profileResponse(.failure(_)):
+        state.isLoading = false
+        state.error = ErrorStore.State()
+        return .none
       case .profileResponse:
+        state.isLoading = false
+        return .none
+      case .error(.reloadButtonTapped):
+        state.error = nil
+        state.isLoading = true
+        return .run { send in
+          await send(.profileResponse(Result {
+            try await profileRepository.getProfile()
+          }))
+        }
+      case .error:
         return .none
       }
+    }
+    .ifLet(\.error, action: \.error) {
+      ErrorStore()
     }
   }
 }
@@ -57,7 +81,11 @@ public struct ProfileView: View {
 
   public var body: some View {
     VStack {
-      if !store.state.profiles.isEmpty {
+      if store.isLoading {
+        ShioriProgressView()
+      } else if let store = store.scope(state: \.error, action: \.error) {
+        ErrorView(store: store)
+      } else if !store.state.profiles.isEmpty {
         PageView(store.state.profiles, id: \.id) { profile in
           Page("\(profile.name)家") {
             ScrollView {

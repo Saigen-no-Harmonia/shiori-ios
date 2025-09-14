@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import ErrorFeature
 import SwiftUI
 import Utility
 
@@ -20,6 +21,7 @@ public struct AccessStore: Sendable {
     var startingDate: String = ""
     var venueURL: URL?
     var venueAddress: String = ""
+    var error: ErrorStore.State?
     var isLoading: Bool = false
 
     public init() {}
@@ -31,6 +33,7 @@ public struct AccessStore: Sendable {
     case accessButtonTapped
     case restaurantButtonTapped
     case browserOpenResponse
+    case error(ErrorStore.Action)
   }
   
   @Dependency(\.accessRepository) var accessRepository
@@ -59,6 +62,10 @@ public struct AccessStore: Sendable {
         state.venueAddress = response.venueAddress
         state.isLoading = false
         return .none
+      case .accessResponse(.failure(_)):
+        state.isLoading = false
+        state.error = ErrorStore.State()
+        return .none
       case .accessResponse:
         state.isLoading = false
         return .none
@@ -78,7 +85,20 @@ public struct AccessStore: Sendable {
         }
       case .browserOpenResponse:
         return .none
+      case .error(.reloadButtonTapped):
+        state.error = nil
+        state.isLoading = true
+        return .run { send in
+          await send(.accessResponse(Result {
+            try await accessRepository.getAccess()
+          }))
+        }
+      case .error:
+        return .none
       }
+    }
+    .ifLet(\.error, action: \.error) {
+      ErrorStore()
     }
   }
 }
@@ -96,6 +116,8 @@ public struct AccessView: View {
       VStack(alignment: .leading) {
         if store.isLoading {
           ShioriProgressView()
+        } else if let store = store.scope(state: \.error, action: \.error) {
+          ErrorView(store: store)
         } else {
           VStack(alignment: .leading) {
             TitleBoldText("会場へのアクセス")
@@ -144,9 +166,9 @@ public struct AccessView: View {
               .padding(.bottom, 12)
             Spacer()
           }
+          .padding(.all, 24)
         }
       }
-      .padding(.all, 24)
     }
     .background(Colors.background.color)
     .onFirstAppear {

@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import ErrorFeature
 import Kingfisher
 import SwiftUI
 import Utility
@@ -18,6 +19,8 @@ public struct PhotoGalleryStore: Sendable {
     var photos: [GalleryPhoto] = []
     var offset: Int = 0
     var isAllLoaded: Bool = false
+    var error: ErrorStore.State?
+    var isLoading: Bool = false
     @Presents var sheet: PhotoStore.State?
 
     public init() {}
@@ -30,6 +33,7 @@ public struct PhotoGalleryStore: Sendable {
     case photoGalleryResponse(Result<GalleryPhotos, Error>)
     case photoTapped(GalleryPhoto)
     case sheet(PresentationAction<PhotoStore.Action>)
+    case error(ErrorStore.Action)
   }
   
   @Dependency(\.photoGalleryRepository) var photoGalleryRepository
@@ -40,6 +44,7 @@ public struct PhotoGalleryStore: Sendable {
     Reduce { state, action in
       switch action {
       case .onFirstAppear:
+        state.isLoading = true
         return .run { send in
           await send(.fetchPhotos)
         }
@@ -49,29 +54,52 @@ public struct PhotoGalleryStore: Sendable {
           await send(.fetchPhotos)
         }
       case .fetchPhotos:
+        if state.offset == 0 {
+          state.isLoading = true
+        }
         return .run { [limit = state.limit, offset = state.offset] send in
           await send(.photoGalleryResponse(Result {
             try await photoGalleryRepository.getGalleryPhotos(limit, offset)
           }))
         }
       case let .photoGalleryResponse(.success(response)):
+        state.isLoading = false
         state.photos += response.galleryPhotos
         state.offset += response.galleryPhotos.count
         if response.galleryPhotos.isEmpty {
           state.isAllLoaded = true
         }
         return .none
+      case .photoGalleryResponse(.failure(_)):
+        state.isLoading = false
+        state.error = ErrorStore.State()
+        return .none
       case .photoGalleryResponse:
+        state.isLoading = false
         return .none
       case let .photoTapped(photo):
         state.sheet = PhotoStore.State(photo: photo)
         return .none
       case .sheet:
         return .none
+      case .error(.reloadButtonTapped):
+        state.error = nil
+        state.offset = 0
+        state.photos = []
+        state.isAllLoaded = false
+        state.isLoading = true
+        return .run { send in
+          await send(.fetchPhotos)
+        }
+      case .error:
+        return .none
       }
     }
     .ifLet(\.$sheet, action: \.sheet) {
       PhotoStore()
+    }
+    .ifLet(\.error, action: \.error) {
+      ErrorStore()
     }
   }
 }
@@ -84,33 +112,41 @@ public struct PhotoGalleryView: View {
   }
   
   public var body: some View {
-    GeometryReader { geometry in
-      ScrollView {
-        LazyVGrid(columns: Array(repeating: GridItem(), count: 2), spacing: 4) {
-          ForEach(store.state.photos, id: \.id) { photo in
-            KFImage(photo.url)
-              .placeholder {
-                ShioriProgressView()
+    ZStack {
+      if store.isLoading && store.state.photos.isEmpty {
+        ShioriProgressView()
+      } else if let errorStore = store.scope(state: \.error, action: \.error) {
+        ErrorView(store: errorStore)
+      } else {
+        GeometryReader { geometry in
+          ScrollView {
+            LazyVGrid(columns: Array(repeating: GridItem(), count: 2), spacing: 4) {
+              ForEach(store.state.photos, id: \.id) { photo in
+                KFImage(photo.url)
+                  .placeholder {
+                    ShioriProgressView()
+                  }
+                  .setProcessor(DownsamplingImageProcessor(size: CGSize(width: geometry.size.width, height: geometry.size.width)))
+                  .resizable()
+                  .scaledToFill()
+                  .frame(width: geometry.size.width / 2, height: geometry.size.width / 2)
+                  .clipped()
+                  .onAppear {
+                    if photo == store.state.photos.last {
+                      store.send(.reachedLastPhoto)
+                    }
+                  }
+                  .onTapGesture {
+                    store.send(.photoTapped(photo))
+                  }
               }
-              .setProcessor(DownsamplingImageProcessor(size: CGSize(width: geometry.size.width, height: geometry.size.width)))
-              .resizable()
-              .scaledToFill()
-              .frame(width: geometry.size.width / 2, height: geometry.size.width / 2)
-              .clipped()
-              .onAppear {
-                if photo == store.state.photos.last {
-                  store.send(.reachedLastPhoto)
-                }
-              }
-              .onTapGesture {
-                store.send(.photoTapped(photo))
-              }
+            }
           }
         }
       }
-      .background(Colors.background.color)
-      .toolbarBackground(Colors.background.color, for: .tabBar)
     }
+    .background(Colors.background.color)
+    .toolbarBackground(Colors.background.color, for: .tabBar)
     .sheet(item: $store.scope(state: \.sheet, action: \.sheet)) { store in
       PhotoView(store: store)
     }

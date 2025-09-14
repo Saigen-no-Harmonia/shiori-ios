@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import ErrorFeature
 import Kingfisher
 import SwiftUI
 import Utility
@@ -13,9 +14,10 @@ import Utility
 @Reducer
 public struct GreetingStore: Sendable {
   @ObservableState
-  public struct State: Equatable {
+  public struct State {
     var photoURL: URL?
     var greetingText: String?
+    var error: ErrorStore.State?
     var isLoading: Bool = false
   
     public init() {}
@@ -24,6 +26,7 @@ public struct GreetingStore: Sendable {
   public enum Action {
     case onFirstAppear
     case greetingResponse(Result<GreetingResponse, Error>)
+    case error(ErrorStore.Action)
   }
   
   @Dependency(\.greetingRepository) var greetingRepository
@@ -45,10 +48,27 @@ public struct GreetingStore: Sendable {
         state.photoURL = response.photo.url
         state.greetingText = response.greeting.content
         return .none
+      case .greetingResponse(.failure(_)):
+        state.isLoading = false
+        state.error = ErrorStore.State()
+        return .none
       case .greetingResponse:
         state.isLoading = false
         return .none
+      case .error(.reloadButtonTapped):
+        state.error = nil
+        state.isLoading = true
+        return .run { send in
+          await send(.greetingResponse(Result {
+            try await greetingRepository.getGreeting()
+          }))
+        }
+      case .error:
+        return .none
       }
+    }
+    .ifLet(\.error, action: \.error) {
+      ErrorStore()
     }
   }
 }
@@ -64,6 +84,9 @@ public struct GreetingView: View {
     GeometryReader { reader in
       if store.isLoading {
         ShioriProgressView()
+          .frame(width: reader.size.width, height: reader.size.height, alignment: .center)
+      } else if let store = store.scope(state: \.error, action: \.error) {
+        ErrorView(store: store)
           .frame(width: reader.size.width, height: reader.size.height, alignment: .center)
       } else {
         ScrollView {
@@ -87,10 +110,10 @@ public struct GreetingView: View {
               .padding(.bottom, 140)
           }
         }
+        .ignoresSafeArea(.all)
+        .background(Colors.background.color)
       }
     }
-    .ignoresSafeArea(.all)
-    .background(Colors.background.color)
     .onFirstAppear {
       store.send(.onFirstAppear)
     }

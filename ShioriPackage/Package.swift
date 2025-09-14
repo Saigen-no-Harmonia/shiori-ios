@@ -39,6 +39,7 @@ let package = Package(
       name: "AccessFeature",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        "ErrorFeature",
         "Utility",
       ]
     ),
@@ -50,10 +51,18 @@ let package = Package(
       ]
     ),
     .target(
+      name: "ErrorFeature",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        "Utility",
+      ]
+    ),
+    .target(
       name: "GreetingFeature",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Kingfisher", package: "Kingfisher"),
+        "ErrorFeature",
         "Utility",
       ]
     ),
@@ -74,6 +83,7 @@ let package = Package(
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "Tagged", package: "swift-tagged"),
+        "ErrorFeature",
         "Utility",
       ]
     ),
@@ -84,6 +94,7 @@ let package = Package(
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "Parchment", package: "Parchment"),
         .product(name: "Tagged", package: "swift-tagged"),
+        "ErrorFeature",
         "Utility",
       ]
     ),
