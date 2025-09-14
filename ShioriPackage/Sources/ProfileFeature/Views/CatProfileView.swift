@@ -15,14 +15,14 @@ struct CatProfileView: View {
   var body: some View {
     GroupBox {
       VStack(alignment: .leading) {
-        HStack {
+        HStack(spacing: 24) {
           KFImage(profile.photoURL)
             .resizable()
             .aspectRatio(contentMode: .fill)
             .frame(width: 150, height: 150)
             .clipped()
             .border(Colors.tertiary.color, width: 1)
-          TitleBoldText(profile.name)
+          Title2BoldText(profile.name)
         }
         .padding(.bottom, 16)
         QuestionTitleView(text: "年齢")

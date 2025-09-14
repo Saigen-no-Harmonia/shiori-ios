@@ -16,8 +16,10 @@ import Utility
 
 public struct MainTabView: View {
   public init () {
-    UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.init(name: "HiraMinProN-W6", size: 10)! ], for: .normal)
-    UITabBar.appearance().backgroundColor = UIColor(Colors.background.color)
+    let appearance: UITabBarAppearance = UITabBarAppearance()
+    appearance.configureWithDefaultBackground()
+    UITabBar.appearance().scrollEdgeAppearance = appearance
+    UITabBar.appearance().standardAppearance = appearance
   }
   
   public var body: some View {
@@ -47,7 +49,7 @@ public struct MainTabView: View {
       )
       .tabItem {
         Image(systemName: "photo")
-        Text("フォトギャラリー")
+        Text("ギャラリー")
       }
       AccessView(store: StoreOf<AccessStore>(
         initialState: AccessStore.State()) {

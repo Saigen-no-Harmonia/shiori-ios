@@ -112,7 +112,6 @@ public struct ProfileView: View {
       }
     }
     .background(Colors.background.color)
-    .toolbarBackground(Colors.background.color, for: .tabBar)
     .onFirstAppear {
       store.send(.onFirstAppear)
     }

@@ -146,7 +146,6 @@ public struct PhotoGalleryView: View {
       }
     }
     .background(Colors.background.color)
-    .toolbarBackground(Colors.background.color, for: .tabBar)
     .sheet(item: $store.scope(state: \.sheet, action: \.sheet)) { store in
       PhotoView(store: store)
     }

@@ -15,7 +15,7 @@ struct ParticipantProfileView: View {
   var body: some View {
     GroupBox {
       VStack(alignment: .leading) {
-        HStack {
+        HStack(spacing: 24) {
           KFImage(profile.photoURL)
             .resizable()
             .aspectRatio(contentMode: .fill)
@@ -24,7 +24,7 @@ struct ParticipantProfileView: View {
             .border(Colors.tertiary.color, width: 1)
           VStack {
             CalloutBoldText(profile.firstNameKana + " " + profile.lastNameKana)
-            TitleBoldText(profile.firstName + " " + profile.lastName)
+            Title2BoldText(profile.firstName + " " + profile.lastName)
           }
         }
         .padding(.bottom, 16)

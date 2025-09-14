@@ -125,16 +125,17 @@ public struct AccessView: View {
   public var body: some View {
     ZStack {
       Colors.background.color
-      VStack(alignment: .leading) {
-        if store.isLoading {
-          ShioriProgressView()
-        } else if let store = store.scope(state: \.error, action: \.error) {
-          ErrorView(store: store)
-        } else {
+      if store.isLoading {
+        ShioriProgressView()
+      } else if let store = store.scope(state: \.error, action: \.error) {
+        ErrorView(store: store)
+      } else {
+        VStack(alignment: .leading) {
           ScrollView {
             VStack(alignment: .leading, spacing: 24) {
               TitleBoldText("会場へのアクセス")
                 .padding(.bottom, 12)
+                .padding(.top, 32)
               GroupBox {
                 VStack {
                   HStack {
@@ -151,7 +152,7 @@ public struct AccessView: View {
                     store.send(.restaurantButtonTapped)
                   }, label: {
                     HStack(spacing: 2) {
-                      BodyText("会場ホームページ", color: .primary)
+                      BodyBoldText("会場ホームページ", color: .primary)
                       Image(systemName: "chevron.right")
                     }
                     .tint(Colors.primary.color)
@@ -177,7 +178,7 @@ public struct AccessView: View {
                     store.send(.venueButtonTapped)
                   }, label: {
                     HStack(spacing: 2) {
-                      BodyText("Google Mapで場所を確認する", color: .primary)
+                      BodyBoldText("Google Mapで場所を確認する", color: .primary)
                       Image(systemName: "chevron.right")
                     }
                     .tint(Colors.primary.color)
@@ -203,7 +204,7 @@ public struct AccessView: View {
                     store.send(.accessButtonTapped)
                   }, label: {
                     HStack(spacing: 2) {
-                      BodyText("詳細なアクセスを確認する", color: .primary)
+                      BodyBoldText("詳細なアクセスを確認する", color: .primary)
                       Image(systemName: "chevron.right")
                     }
                     .tint(Colors.primary.color)
