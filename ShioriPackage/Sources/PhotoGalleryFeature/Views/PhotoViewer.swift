@@ -29,12 +29,12 @@ final class PhotoViewerView: UIView {
     scrollView.delegate = self
     scrollView.maximumZoomScale = 3.0
     scrollView.minimumZoomScale = 1.0
-    // if you want to disable indicater
-    // scrollView.showsHorizontalScrollIndicator = false
-    // scrollView.showsVerticalScrollIndicator = false
     addSubview(scrollView)
-    
-    imageView.kf.setImage(with: imageURL)
+
+    imageView.alpha = 0
+    imageView.kf.setImage(with: imageURL) { [weak self] _ in
+      self?.imageView.alpha = 1
+    }
     imageView.contentMode = .scaleAspectFit
     scrollView.addSubview(imageView)
   }
