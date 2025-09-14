@@ -29,7 +29,9 @@ extension AccessRepository {
                                       restaurantURL: URL(string: "https://example/com")!,
                                       startingDate: Date.now,
                                       venueURL: URL(string: "https://example.com")!,
-                                      venueAddress: "東京都千代田区千代田１−１")
+                                      venueAddress: "東京都千代田区千代田１−１",
+                                      latitude: "50",
+                                      longitude: "50")
 }
 
 extension DependencyValues {

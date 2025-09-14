@@ -15,6 +15,8 @@ public struct Access: Decodable, Equatable, Sendable {
   let startingDate: Date
   let venueURL: URL
   let venueAddress: String
+  let latitude: String
+  let longitude: String
 
   enum CodingKeys: String, CodingKey {
     case gatheringDate
@@ -24,5 +26,7 @@ public struct Access: Decodable, Equatable, Sendable {
     case startingDate
     case venueURL = "venueAccessPageUrl"
     case venueAddress
+    case latitude
+    case longitude
   }
 }

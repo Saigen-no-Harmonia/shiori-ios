@@ -21,6 +21,7 @@ public struct AccessStore: Sendable {
     var startingDate: String = ""
     var venueURL: URL?
     var venueAddress: String = ""
+    var access: Access?
     var error: ErrorStore.State?
     var isLoading: Bool = false
 
@@ -31,6 +32,7 @@ public struct AccessStore: Sendable {
     case onFirstAppear
     case accessResponse(Result<Access, Error>)
     case accessButtonTapped
+    case venueButtonTapped
     case restaurantButtonTapped
     case browserOpenResponse
     case error(ErrorStore.Action)
@@ -60,6 +62,7 @@ public struct AccessStore: Sendable {
         state.restaurantURL = response.restaurantURL
         state.venueURL = response.venueURL
         state.venueAddress = response.venueAddress
+        state.access = response
         state.isLoading = false
         return .none
       case .accessResponse(.failure(_)):
@@ -80,6 +83,15 @@ public struct AccessStore: Sendable {
         return .run { [url = state.restaurantURL] send in
           guard let url,
                 await applicationClient.canOpenURL(url) else { return }
+          _ = try await applicationClient.open(url)
+          await send(.browserOpenResponse)
+        }
+      case .venueButtonTapped:
+        guard let latitude = state.access?.latitude,
+              let longitude = state.access?.longitude else { return .none }
+        let url: URL = URL(string:  "https://www.google.com/maps/place/\(latitude),\(longitude)/@\(latitude),\(longitude),18z/data")!
+        return .run { send in
+          guard await applicationClient.canOpenURL(url) else { return }
           _ = try await applicationClient.open(url)
           await send(.browserOpenResponse)
         }
@@ -119,54 +131,107 @@ public struct AccessView: View {
         } else if let store = store.scope(state: \.error, action: \.error) {
           ErrorView(store: store)
         } else {
-          VStack(alignment: .leading) {
-            TitleBoldText("会場へのアクセス")
-              .padding(.bottom, 12)
-            Divider()
-              .padding(.bottom, 12)
-            HeadlineText("会場名")
-              .padding(.bottom, 6)
-            Title3BoldText(store.state.restaurantName)
-              .padding(.bottom, 12)
-            Button(action: {
-              store.send(.restaurantButtonTapped)
-            }, label: {
-              HStack(spacing: 2) {
-                BodyText("会場ホームページ", color: .primary)
-                Image(systemName: "chevron.right")
+          ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+              TitleBoldText("会場へのアクセス")
+                .padding(.bottom, 12)
+              GroupBox {
+                VStack {
+                  HStack {
+                    Image(.ribbon)
+                    HeadlineText("会場名")
+                      .padding(.top, 2)
+                    Image(.ribbon)
+                  }
+                  Divider()
+                  .padding(.bottom, 6)
+                  Title3BoldText(store.state.restaurantName)
+                    .padding(.bottom, 12)
+                  Button(action: {
+                    store.send(.restaurantButtonTapped)
+                  }, label: {
+                    HStack(spacing: 2) {
+                      BodyText("会場ホームページ", color: .primary)
+                      Image(systemName: "chevron.right")
+                    }
+                    .tint(Colors.primary.color)
+                  })
+                }
+                .frame(maxWidth: .infinity)
               }
-              .tint(Colors.primary.color)
-            })
-            Divider()
-              .padding(.bottom, 12)
-            HeadlineText("会場住所")
-              .padding(.bottom, 6)
-            Title3BoldText(store.state.venueAddress)
-              .padding(.bottom, 12)
-            Divider()
-              .padding(.bottom, 12)
-            HeadlineText("集合場所")
-              .padding(.bottom, 6)
-            Title3BoldText(store.state.gatheringSpot)
-              .padding(.bottom, 12)
-            Button(action: {
-              store.send(.accessButtonTapped)
-            }, label: {
-              HStack(spacing: 2) {
-                BodyText("詳細なアクセスを確認する", color: .primary)
-                Image(systemName: "chevron.right")
+              .groupBoxStyle(AccessGroupBoxStyle())
+              GroupBox {
+                VStack {
+                  HStack {
+                    Image(.ribbon)
+                    HeadlineText("会場住所")
+                      .padding(.top, 2)
+                    Image(.ribbon)
+                  }
+                  Divider()
+                    .padding(.bottom, 6)
+                  Title3BoldText(store.state.venueAddress)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.bottom, 12)
+                  Button(action: {
+                    store.send(.venueButtonTapped)
+                  }, label: {
+                    HStack(spacing: 2) {
+                      BodyText("Google Mapで場所を確認する", color: .primary)
+                      Image(systemName: "chevron.right")
+                    }
+                    .tint(Colors.primary.color)
+                  })
+                }
+                .frame(maxWidth: .infinity)
               }
-              .tint(Colors.primary.color)
-            })
-            Divider()
-              .padding(.bottom, 12)
-            HeadlineText("集合時間")
-              .padding(.bottom, 6)
-            Title3BoldText(store.state.gatheringDate)
-              .padding(.bottom, 12)
-            Spacer()
+              .groupBoxStyle(AccessGroupBoxStyle())
+              GroupBox {
+                VStack {
+                  HStack {
+                    Image(.ribbon)
+                    HeadlineText("集合場所")
+                      .padding(.top, 2)
+                    Image(.ribbon)
+                  }
+                  Divider()
+                    .padding(.bottom, 6)
+                  Title3BoldText(store.state.gatheringSpot)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.bottom, 12)
+                  Button(action: {
+                    store.send(.accessButtonTapped)
+                  }, label: {
+                    HStack(spacing: 2) {
+                      BodyText("詳細なアクセスを確認する", color: .primary)
+                      Image(systemName: "chevron.right")
+                    }
+                    .tint(Colors.primary.color)
+                  })
+                }
+                .frame(maxWidth: .infinity)
+              }
+              .groupBoxStyle(AccessGroupBoxStyle())
+              GroupBox {
+                VStack {
+                  HStack {
+                    Image(.ribbon)
+                    HeadlineText("集合時間")
+                      .padding(.top, 2)
+                    Image(.ribbon)
+                  }
+                  Divider()
+                    .padding(.bottom, 6)
+                  Title3BoldText(store.state.gatheringDate)
+                    .padding(.bottom, 12)
+                }
+                .frame(maxWidth: .infinity)
+              }
+              .groupBoxStyle(AccessGroupBoxStyle())
+              Spacer()
+            }
+            .padding(.all, 24)
           }
-          .padding(.all, 24)
         }
       }
     }
