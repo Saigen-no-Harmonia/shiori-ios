@@ -6,8 +6,9 @@
 //
 
 import AppFeature
-import SwiftUI
+import ComposableArchitecture
 import Kingfisher
+import SwiftUI
 
 @main
 struct ShioriApp: App {
@@ -21,8 +22,10 @@ struct ShioriApp: App {
 
   var body: some Scene {
     WindowGroup {
-      AppView()
-        .preferredColorScheme(.light)
+      AppView(store: Store(initialState: AppFeature.AppStore.State()) {
+        AppFeature.AppStore()
+      })
+      .preferredColorScheme(.light)
     }
   }
 }

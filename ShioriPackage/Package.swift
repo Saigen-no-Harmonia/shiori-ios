@@ -47,7 +47,8 @@ let package = Package(
       name: "AppFeature",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-        "MainTabFeature"
+        "MainTabFeature",
+        "SplashFeature",
       ]
     ),
     .target(
@@ -97,6 +98,13 @@ let package = Package(
         "ErrorFeature",
         "Utility",
       ]
+    ),
+    .target(
+      name: "SplashFeature",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        "Utility",
+      ],
     ),
     .target(
       name: "Utility",
