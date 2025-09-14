@@ -7,22 +7,24 @@
 
 import ComposableArchitecture
 import MainTabFeature
-import SplashFeature
+import PublicationEndFeature
 import SwiftUI
 import Utility
 
 @Reducer
 public struct AppStore {
   @ObservableState
-  public struct State {
-    var isSplashCompleted: Bool = false
+  public struct State: Equatable {
+    var isPublicationEnded: Bool = false
+
     public init() {}
   }
 
   public enum Action {
     case onFirstAppear
-    case splashCompleted
   }
+
+  @Dependency(\.date) var date
 
   public init() {}
 
@@ -30,12 +32,15 @@ public struct AppStore {
     Reduce { state, action in
       switch action {
       case .onFirstAppear:
-        return .run { send in
-          try await Task.sleep(for: .seconds(2))
-          await send(.splashCompleted, animation: .easeInOut)
+        var calendar = Calendar(identifier: .gregorian)
+        if let timeZone = TimeZone(identifier: "Asia/Tokyo") {
+          calendar.timeZone = timeZone
         }
-      case .splashCompleted:
-        state.isSplashCompleted = true
+        calendar.locale = Locale(identifier: "ja_JP")
+        if let publicationEndDate = calendar.date(from: DateComponents(year: 2026, month: 2, day: 1, hour: 0, minute: 0, second: 0)),
+           date.now > publicationEndDate {
+          state.isPublicationEnded = true
+        }
         return .none
       }
     }
@@ -52,9 +57,9 @@ public struct AppView: View {
   public var body: some View {
     ZStack {
       MainTabView()
-      SplashView()
-        .opacity(store.state.isSplashCompleted ? 0 : 1)
-        .animation(.easeInOut(duration: 0.5), value: store.state.isSplashCompleted)
+      if store.isPublicationEnded {
+        PublicationEndView()
+      }
     }
     .onFirstAppear {
       store.send(.onFirstAppear)
@@ -62,8 +67,16 @@ public struct AppView: View {
   }
 }
 
-#Preview {
+#Preview("PublicationEnded") {
   AppView(store: Store(initialState: AppStore.State()) {
     AppStore()
+  } withDependencies: {
+    var calendar = Calendar(identifier: .gregorian)
+    if let timeZone = TimeZone(identifier: "Asia/Tokyo") {
+      calendar.timeZone = timeZone
+    }
+    calendar.locale = Locale(identifier: "ja_JP")
+    let date = calendar.date(from: DateComponents(year: 2026, month: 2, day: 1, hour: 0, minute: 0, second: 1))!
+    $0.date = .constant(date)
   })
 }

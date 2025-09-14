@@ -93,6 +93,8 @@ public struct GreetingView: View {
           VStack(alignment: .center) {
             ZStack(alignment: .bottom) {
               KFImage(store.photoURL)
+                .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 1000, height: 1000)))
+                .fade(duration: 0.25)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: reader.size.width,

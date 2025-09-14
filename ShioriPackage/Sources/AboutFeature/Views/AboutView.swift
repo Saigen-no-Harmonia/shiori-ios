@@ -20,6 +20,7 @@ public struct AboutStore: Sendable {
   
   public enum Action {
     case onFirstAppear
+    case tapLicense
     case tapSourceCodeiOS
     case tapSourceCodeServer
     case browserOpenResponse
@@ -36,6 +37,13 @@ public struct AboutStore: Sendable {
       case .onFirstAppear:
         state.version = "v\(bundleClient.shortVersionString())"
         return .none
+      case .tapLicense:
+        return .run { send in
+          let url = URL(string: UIApplication.openSettingsURLString)!
+          guard await applicationClient.canOpenURL(url) else { return }
+          _ = try await applicationClient.open(url)
+          await send(.browserOpenResponse)
+        }
       case .tapSourceCodeiOS:
         return .run { send in
           let url = URL(string: "https://github.com/Saigen-no-Harmonia/shiori-ios")!
@@ -75,22 +83,17 @@ public struct AboutView: View {
           List {
             Section {
               HStack {
-                HStack {
-                  Image(systemName: "licenseplate")
-                    .frame(width: 18, height: 18)
-                  BodyText("ライセンス情報")
-                }
+                BodyText("📕ライセンス情報")
                 Spacer()
                 Image(systemName: "chevron.right")
                   .frame(width: 18, height: 18)
                   .foregroundStyle(.gray)
               }
+              .onTapGesture {
+                store.send(.tapLicense)
+              }
               HStack {
-                HStack {
-                  Image(systemName: "text.page")
-                    .frame(width: 18, height: 18)
-                  BodyText("ソースコード (iOS)")
-                }
+                BodyText("📱ソースコード (iOS)")
                 Spacer()
                 Image(systemName: "chevron.right")
                   .frame(width: 18, height: 18)
@@ -100,11 +103,7 @@ public struct AboutView: View {
                 store.send(.tapSourceCodeiOS)
               }
               HStack {
-                HStack {
-                  Image(systemName: "text.page")
-                    .frame(width: 18, height: 18)
-                  BodyText("ソースコード (サーバー)")
-                }
+                BodyText("💻ソースコード (サーバー)")
                 Spacer()
                 Image(systemName: "chevron.right")
                   .frame(width: 18, height: 18)
@@ -114,13 +113,14 @@ public struct AboutView: View {
                 store.send(.tapSourceCodeServer)
               }
               HStack {
-                HStack {
-                  Image(systemName: "tag.fill")
-                    .frame(width: 18, height: 18)
-                  BodyText("アプリバージョン")
-                }
+                BodyText("🏷️アプリバージョン")
                 Spacer()
                 BodyText(store.state.version)
+              }
+              HStack {
+                BodyText("⚠️アプリの公開期間")
+                Spacer()
+                BodyText("2026年1月末まで")
               }
             }
             .listRowBackground(Colors.background.color)

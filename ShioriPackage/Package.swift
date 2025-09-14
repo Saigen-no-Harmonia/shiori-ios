@@ -48,7 +48,7 @@ let package = Package(
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         "MainTabFeature",
-        "SplashFeature",
+        "PublicationEndFeature"
       ]
     ),
     .target(
@@ -100,7 +100,7 @@ let package = Package(
       ]
     ),
     .target(
-      name: "SplashFeature",
+      name: "PublicationEndFeature",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         "Utility",
@@ -114,6 +114,10 @@ let package = Package(
     ),
     .testTarget(
       name: "ShioriPackageTests",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        "AppFeature",
+      ]
     )
   ]
 )

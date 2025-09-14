@@ -17,6 +17,9 @@ struct ParticipantProfileView: View {
       VStack(alignment: .leading) {
         HStack(spacing: 24) {
           KFImage(profile.photoURL)
+            .placeholder {
+              ShioriProgressView()
+            }
             .resizable()
             .aspectRatio(contentMode: .fill)
             .frame(maxWidth: 150, maxHeight: 150)

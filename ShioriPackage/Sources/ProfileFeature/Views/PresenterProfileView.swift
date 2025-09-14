@@ -16,8 +16,12 @@ struct PresenterProfileView: View {
     GroupBox {
       VStack(alignment: .leading) {
         KFImage(profile.photoURL)
+          .placeholder {
+            ShioriProgressView()
+          }
           .resizable()
-          .aspectRatio(contentMode: .fit)
+          .aspectRatio(contentMode: .fill)
+          .frame(maxWidth: .infinity, minHeight: 250)
           .clipped()
           .border(Colors.tertiary.color, width: 1)
           .padding(.bottom, 16)

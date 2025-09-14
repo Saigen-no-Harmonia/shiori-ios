@@ -17,6 +17,9 @@ struct CatProfileView: View {
       VStack(alignment: .leading) {
         HStack(spacing: 24) {
           KFImage(profile.photoURL)
+            .placeholder {
+              ShioriProgressView()
+            }
             .resizable()
             .aspectRatio(contentMode: .fill)
             .frame(width: 150, height: 150)

@@ -21,6 +21,8 @@ public struct PhotoGalleryStore: Sendable {
     var isAllLoaded: Bool = false
     var error: ErrorStore.State?
     var isLoading: Bool = false
+    var isPagingError: Bool = false
+    var isPagingLoading: Bool = false
     @Presents var sheet: PhotoStore.State?
 
     public init() {}
@@ -34,6 +36,7 @@ public struct PhotoGalleryStore: Sendable {
     case photoTapped(GalleryPhoto)
     case sheet(PresentationAction<PhotoStore.Action>)
     case error(ErrorStore.Action)
+    case reloadButtonTapped
   }
   
   @Dependency(\.photoGalleryRepository) var photoGalleryRepository
@@ -56,6 +59,8 @@ public struct PhotoGalleryStore: Sendable {
       case .fetchPhotos:
         if state.offset == 0 {
           state.isLoading = true
+        } else {
+          state.isPagingLoading = true
         }
         return .run { [limit = state.limit, offset = state.offset] send in
           await send(.photoGalleryResponse(Result {
@@ -64,6 +69,7 @@ public struct PhotoGalleryStore: Sendable {
         }
       case let .photoGalleryResponse(.success(response)):
         state.isLoading = false
+        state.isPagingLoading = false
         state.photos += response.galleryPhotos
         state.offset += response.galleryPhotos.count
         if response.galleryPhotos.isEmpty {
@@ -72,10 +78,16 @@ public struct PhotoGalleryStore: Sendable {
         return .none
       case .photoGalleryResponse(.failure(_)):
         state.isLoading = false
-        state.error = ErrorStore.State()
+        state.isPagingLoading = false
+        if state.photos.isEmpty {
+          state.error = ErrorStore.State()
+        } else {
+          state.isPagingError = true
+        }
         return .none
       case .photoGalleryResponse:
         state.isLoading = false
+        state.isPagingLoading = false
         return .none
       case let .photoTapped(photo):
         state.sheet = PhotoStore.State(photo: photo)
@@ -93,6 +105,12 @@ public struct PhotoGalleryStore: Sendable {
         }
       case .error:
         return .none
+      case .reloadButtonTapped:
+        state.isPagingLoading = true
+        state.isPagingError = false
+        return .run { send in
+          await send(.fetchPhotos)
+        }
       }
     }
     .ifLet(\.$sheet, action: \.sheet) {
@@ -140,6 +158,28 @@ public struct PhotoGalleryView: View {
                     store.send(.photoTapped(photo))
                   }
               }
+            }
+            if store.isPagingError {
+              VStack(alignment: .center) {
+                BodyText("読み込みに失敗しました")
+                Spacer()
+                Button(action: {
+                  store.send(.reloadButtonTapped)
+                }, label: {
+                  BodyBoldText("再読み込み", color: .white)
+                    .frame(maxWidth: .infinity, minHeight: 40)
+                    .background(Colors.primary.color)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .padding(.horizontal, 24)
+                })
+                .frame(height: 60)
+                .padding(.bottom, 24)
+              }
+            }
+            if store.isPagingLoading {
+              ShioriProgressView()
+                .frame(height: 60)
+                .padding(.bottom, 24)
             }
           }
         }

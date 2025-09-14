@@ -146,7 +146,7 @@ public struct AccessView: View {
                   }
                   Divider()
                   .padding(.bottom, 6)
-                  Title3BoldText(store.state.restaurantName)
+                  BodyBoldText(store.state.restaurantName)
                     .padding(.bottom, 12)
                   Button(action: {
                     store.send(.restaurantButtonTapped)
@@ -157,6 +157,7 @@ public struct AccessView: View {
                     }
                     .tint(Colors.primary.color)
                   })
+                  .padding(.bottom, 6)
                 }
                 .frame(maxWidth: .infinity)
               }
@@ -171,7 +172,7 @@ public struct AccessView: View {
                   }
                   Divider()
                     .padding(.bottom, 6)
-                  Title3BoldText(store.state.venueAddress)
+                  BodyBoldText(store.state.venueAddress)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.bottom, 12)
                   Button(action: {
@@ -183,6 +184,7 @@ public struct AccessView: View {
                     }
                     .tint(Colors.primary.color)
                   })
+                  .padding(.bottom, 6)
                 }
                 .frame(maxWidth: .infinity)
               }
@@ -197,7 +199,7 @@ public struct AccessView: View {
                   }
                   Divider()
                     .padding(.bottom, 6)
-                  Title3BoldText(store.state.gatheringSpot)
+                  BodyBoldText(store.state.gatheringSpot)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.bottom, 12)
                   Button(action: {
@@ -209,6 +211,7 @@ public struct AccessView: View {
                     }
                     .tint(Colors.primary.color)
                   })
+                  .padding(.bottom, 6)
                 }
                 .frame(maxWidth: .infinity)
               }
@@ -223,8 +226,8 @@ public struct AccessView: View {
                   }
                   Divider()
                     .padding(.bottom, 6)
-                  Title3BoldText(store.state.gatheringDate)
-                    .padding(.bottom, 12)
+                  BodyBoldText(store.state.gatheringDate)
+                    .padding(.bottom, 6)
                 }
                 .frame(maxWidth: .infinity)
               }
