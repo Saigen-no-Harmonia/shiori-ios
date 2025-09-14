@@ -44,14 +44,15 @@ public struct PhotoView: View {
   }
 
   public var body: some View {
-    KFImage(store.state.photo.url)
-      .resizable()
-      .scaledToFit()
-      .onDisappear {
-        if store.sendOnDisappear {
-          store.send(.onDisappear)
-        }
+    ZStack {
+      Color.black.ignoresSafeArea()
+      PhotoViewer(imageURL: store.state.photo.url)
+    }
+    .onDisappear {
+      if store.sendOnDisappear {
+        store.send(.onDisappear)
       }
+    }
   }
 }
 

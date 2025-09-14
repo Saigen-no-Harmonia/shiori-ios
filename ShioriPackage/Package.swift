@@ -106,6 +106,6 @@ let package = Package(
     ),
     .testTarget(
       name: "ShioriPackageTests",
-    ),
+    )
   ]
 )
