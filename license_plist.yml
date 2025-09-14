@@ -1,0 +1,4 @@
+options:
+  xcodeprojPath: "Shiori.xcodeproj"
+  prefix: net.canacel.shiori.ios
+  --output-path: Shiori/Settings.bundle
